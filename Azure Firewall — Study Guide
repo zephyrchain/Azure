@@ -1,0 +1,162 @@
+# 🔥 Azure Firewall — Study Guide  
+
+A study guide inspired by John Savill’s session: [Azure Firewall Overview (Sep 2021)](https://www.youtube.com/watch?v=JiUerkqyW0g)
+
+---
+
+## 🔐 Introduction
+
+Azure Firewall is a **cloud-native, stateful firewall service** that protects virtual network resources. It auto-scales with traffic load, supports availability zones, and inspects inbound/outbound traffic across VNets—including peered networks.
+
+### 🌍 Traffic Inspection
+
+- **Inbound traffic** to virtual networks  
+- **Outbound traffic** from virtual networks  
+- **VNet peering traffic** (east-west inspection)
+
+---
+
+## ⚙️ Deployment and Setup
+
+### 📦 Subnet Requirements
+
+- Must be deployed in a dedicated subnet named: `AzureFirewallSubnet`  
+- Minimum subnet size: `/26`
+
+### 🔄 Peering Configuration
+
+- Enable **“Allow forwarded traffic”** in VNet peering for spoke-to-spoke traffic through the firewall
+
+### 🧪 Diagnostic Settings
+
+- Send logs to **Log Analytics workspace** for deep monitoring and troubleshooting
+
+---
+
+## 🛣️ Routing & User Defined Routes (UDRs)
+
+Azure Firewall uses **route tables** to control traffic flow.
+
+### 🧭 Typical UDR Configuration
+
+- **Default Route** – Redirects internet-bound traffic through the firewall  
+- **Specific Routes** – Redirects internal traffic (IP ranges) to firewall for inspection
+
+---
+
+## 📁 IP Groups
+
+Simplify rule creation by grouping IP addresses:
+
+- Define reusable **IP Groups**  
+- Reference them across multiple rules  
+- Streamlines management and avoids duplication
+
+---
+
+## 📑 Firewall Policies
+
+Policies define the firewall's behavior and can be **centrally managed** across firewalls.
+
+### 🧱 Structure
+
+- **Rule Collection Groups** → contain **Rule Collections**
+- Ordered by **priority**
+
+### 🔥 Types of Rules
+
+| Rule Type         | Use Case                                                    |
+|-------------------|-------------------------------------------------------------|
+| **DNAT Rules**     | Map public IPs to internal private IPs                     |
+| **Network Rules**  | Filter traffic based on IPs, ports, and protocols (L4)     |
+| **Application Rules** | Layer 7 filtering with FQDNs, URLs, and categories      |
+
+### 🚦 Rule Processing Order
+
+1. DNAT Rules  
+2. Network Rules  
+3. Application Rules
+
+---
+
+## 🧠 Threat Intelligence
+
+Azure Firewall includes **Threat Intelligence filtering** to proactively block malicious traffic.
+
+- Uses Microsoft’s threat feeds for known IPs/domains  
+- Evaluated **before rule processing**  
+- Can be set to `Alert` or `Deny`
+
+---
+
+## 🌐 Premium Features
+
+Azure Firewall Premium unlocks advanced protection for sensitive workloads.
+
+### 🔎 TLS Inspection
+
+- Acts as man-in-the-middle for encrypted traffic  
+- **Decryption → Inspection → Re-encryption**  
+- Requires certificates and **managed identity**
+
+### 🛡️ IDPS (Intrusion Detection & Prevention)
+
+- Detects and blocks traffic based on known patterns  
+- Works with both **plain-text** and **TLS** traffic  
+- Modes: `Alert` or `Deny`
+
+### 🌍 URL Filtering
+
+- Block traffic based on **full URLs**, even if encrypted  
+- Example: Block `example.com/social/chat` instead of whole domain
+
+### 🗂️ Web Categories
+
+- Filter based on website classification:  
+  - News, Finance, Social Media, Entertainment, etc.
+
+---
+
+## 📊 Diagnostics and Logging
+
+Ensure visibility by configuring diagnostic settings:
+
+- Output to **Log Analytics**, **Storage**, or **Event Hub**  
+- Logs include:  
+  - Rule matches  
+  - Allowed/denied requests  
+  - Threat alerts  
+  - Performance metrics
+
+---
+
+## 🧭 Firewall Manager
+
+Azure Firewall Manager centralizes policy and firewall administration.
+
+- View and edit policies  
+- Apply policies to multiple firewalls  
+- Simplify governance across regions and subscriptions
+
+---
+
+## ✅ Summary
+
+Azure Firewall delivers:
+
+- ✅ Fully managed, **stateful** traffic inspection  
+- ✅ Layer 4 and Layer 7 rule support  
+- ✅ **Auto-scaling** and **availability zone** resilience  
+- ✅ **Threat Intelligence**, **TLS inspection**, and **IDPS** (Premium)  
+- ✅ Flexible rule management via policies and IP groups  
+- ✅ Integration with Firewall Manager and diagnostic pipelines
+
+---
+
+### 📺 Reference  
+John Savill — *Technical Training Channel*  
+📹 [Watch the Session](https://www.youtube.com/watch?v=JiUerkqyW0g)
+
+---
+
+Fortify your perimeter. Monitor with precision. Govern with confidence. 🚀
