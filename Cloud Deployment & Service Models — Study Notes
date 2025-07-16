@@ -1,0 +1,125 @@
+# ☁️ Cloud Deployment & Service Models — Study Notes
+
+These notes are designed as a quick-reference companion for reviewing core cloud concepts, particularly in Azure, inspired by John Savill's expert training series.
+
+---
+
+## 🚀 Cloud Deployment Models
+
+### **Private Cloud**
+- Operated solely for a single organization, managed internally or by a third party  
+- Greater control and customization  
+- Requires significant capital expenditure  
+
+### **Public Cloud**
+- Provided by third-party vendors over the public internet  
+- Highly scalable, cost-effective, low maintenance  
+
+### **Community Cloud**
+- Shared infrastructure among organizations with common concerns  
+- Cost-effective for groups with shared compliance needs  
+
+### **Hybrid Cloud**
+- Combines private and public cloud environments  
+- Facilitates flexibility, security, and compliance  
+
+---
+
+## 🧩 Cloud Service Models
+
+### **IaaS (Infrastructure as a Service)**
+- Virtualized computing resources over the internet  
+- You manage OS, applications, and middleware  
+- Provider handles the underlying infrastructure  
+
+### **PaaS (Platform as a Service)**
+- Develop, run, and manage applications without worrying about infrastructure  
+- You focus on development; provider manages platform  
+
+### **SaaS (Software as a Service)**
+- Software delivered over the internet via subscription  
+- Accessible via web browser; provider manages everything  
+
+---
+
+## 📐 NIST Characteristics of Cloud Computing
+
+- On-demand self-service  
+- Broad network access  
+- Resource pooling  
+- Rapid elasticity  
+- Measured service  
+
+---
+
+## ☁️ When to Use Public Cloud
+
+- Predictable bursting (e.g., holiday seasons)  
+- Startup scaling (e.g., launching a new app)  
+- Unpredictable bursting (e.g., breaking news traffic)  
+- Seasonal workloads (e.g., tax season)  
+- Disaster recovery (e.g., backup solutions)  
+- DMZ/public-facing applications  
+- Global deployment needs  
+- Special projects with short-term lifecycles  
+
+---
+
+## 🔧 Types of Azure Services
+
+| Category               | Examples                                                |
+|------------------------|---------------------------------------------------------|
+| **Compute**            | Virtual Machines, Kubernetes, Functions                 |
+| **Storage**            | Blob Storage, Files, Disk Storage                       |
+| **Networking**         | Virtual Network, Load Balancer, VPN Gateway             |
+| **Databases**          | SQL Database, Cosmos DB, MySQL/PostgreSQL               |
+| **AI / ML**            | Azure Machine Learning, Cognitive Services, Bot Service |
+| **Analytics**          | Synapse Analytics, HDInsight, Data Factory              |
+| **Security**           | Active Directory, Security Center, Key Vault            |
+| **DevOps**             | Azure DevOps, Pipelines, Repos                          |
+| **IoT**                | IoT Hub, IoT Central, Azure Sphere                      |
+
+---
+
+## 💳 Acquiring Azure
+
+- **Free Account** – $200 credit + free services for 12 months  
+- **Visual Studio Subscription** – Monthly Azure credits  
+- **Pay-As-You-Go** – Flexible, consumption-based billing  
+- **Enterprise Agreement** – Customized pricing and consolidated billing  
+- **Cloud Solution Provider** – Bundled solutions with partner services  
+
+---
+
+## 🔁 Reliability in Azure
+
+- Shifts reliability from hardware to software  
+- Use of multiple instances and redundancy  
+- Redundant data centers across regions  
+- Service Level Agreements (SLAs)  
+- Design for high availability and resilience  
+
+---
+
+## 🌐 Why Use Azure?
+
+- Consistently ranks high in Gartner's Magic Quadrant  
+- Strong hybrid capabilities (Azure Arc, Azure Stack)  
+- Seamless integration with Microsoft and third-party tools  
+- Global reach with regional data centers  
+- Broad range of service offerings  
+- High standards for security and compliance  
+- Flexible, cost-managed pricing options  
+
+---
+
+## 📺 Reference
+
+**Source**:  
+John Savill — *Technical Training Channel*  
+📹 [Watch on YouTube](https://www.youtube.com/@NTFAQGuy)  
+🎓 Session One: [Cloud & Microsoft Azure 101](https://www.youtube.com/watch?v=afzzawldfFk&list=PLlVtbbG169nGccbp8VSpAozu3w9xSQJoY)
+
+---
+
+Stay curious, stay sharp. Make cloud a lifestyle.
