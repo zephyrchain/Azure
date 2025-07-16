@@ -1,0 +1,165 @@
+# 🌐 Azure Application Gateway — Study Guide  
+
+A study guide based on John Savill’s lecture: [Azure App Gateway (Sep 7, 2021)](https://www.youtube.com/watch?v=B3O6bXu-NbM)
+
+---
+
+## 1️⃣ Introduction
+
+Azure Application Gateway is a **Layer 7 (Application Layer)** load balancer that manages and distributes traffic to your web services with deep packet inspection and protocol-level intelligence.
+
+### 🔍 Key Comparison
+
+| Feature                   | Azure Load Balancer          | Azure Application Gateway              |
+|---------------------------|------------------------------|----------------------------------------|
+| OSI Layer                 | Layer 4                      | Layer 7                                |
+| Protocols Supported       | TCP/UDP                      | HTTP, HTTPS, HTTP/2, WebSockets        |
+| Advanced Features         | None                         | SSL Termination, URL Routing, etc.     |
+
+---
+
+## 2️⃣ Deployment & Configuration
+
+### 📡 Virtual Network & Subnet
+
+- Must deploy App Gateway into a **virtual network**.
+- Required subnet:
+  - **V1**: `/26` (up to 32 instances)
+  - **V2**: `/24` (up to 125 instances)
+- Subnet name is user-defined (e.g., `gateway-subnet`).
+
+### 🆚 Versions Overview
+
+| Feature           | Version 1                         | Version 2                                 |
+|-------------------|-----------------------------------|-------------------------------------------|
+| Cost Model        | Size-based fixed cost + data      | Time-based fixed + capacity unit charges  |
+| Auto-scaling      | ❌                                | ✅                                       |
+| Availability Zones| ❌                                | ✅                                       |
+| Static VIPs       | ❌                                | ✅                                       |
+| Header Rewrite    | ❌                                | ✅                                       |
+| WAF Custom Rules  | ❌                                | ✅                                       |
+
+---
+
+## 3️⃣ Key Features
+
+### 🧠 Layer 7 Capabilities
+
+- **URL Redirection** – Redirect requests to different destinations.
+- **URL-Based Routing** – Route based on URL paths (`/blog`, `/store`, etc.).
+- **Rewrite Rules** – Modify headers, cookies, query strings.
+- **SSL/TLS Termination** – Offload SSL to gateway and forward decrypted traffic.
+- **Session Affinity** – Cookie-based session stickiness.
+- **Connection Draining** – Allow graceful backend member removal.
+
+### 🚀 V2 Enhancements
+
+- **Auto-Scaling**
+- **Availability Zones**
+- **Static Frontend VIPs**
+- **Header Rewrite**
+- **WAF Custom Rules**
+
+---
+
+## 4️⃣ Architecture & Workflow
+
+### 🖥️ Backend Pools
+
+Can include:
+- Virtual Machines (VMs)
+- Virtual Machine Scale Sets (VMSS)
+- App Services
+- IP Addresses (public/private/on-prem)
+- Fully Qualified Domain Names (FQDNs)
+
+🔸 Note: Backend pool members can span regions, but the App Gateway itself is regional.
+
+### 🌐 Frontend IPs
+
+- Always includes a **Public IP**
+- Optionally includes a **Private IP**
+- V2 supports **Static VIPs**
+- DNS name persists for App Gateway’s lifecycle
+
+### 🔉 Listeners
+
+Define how incoming traffic is received:
+
+- **Basic Listener** – IP, port, protocol-based
+- **Multi-site Listener** – Uses host headers to differentiate (e.g., `contoso.com`, `fabrique.io`)
+
+### ⚙️ Rules
+
+- **Basic Rule** – Direct traffic to one backend
+- **Path-Based Rule** – Route based on URL paths
+- **Redirection Rule** – Redirect to listener or external site (e.g., HTTP → HTTPS)
+
+### ✏️ Rewrite Rules
+
+Used to modify:
+- Request/response headers
+- Cookies
+- URLs
+- Query strings
+
+### 📑 HTTP Settings
+
+- **Re-encryption**
+- **Cookie-Based Affinity**
+- **Connection Draining**
+- **Health Probes**
+
+---
+
+## 5️⃣ Integration with AKS
+
+Azure App Gateway can serve as an **Ingress Controller** for Azure Kubernetes Service (AKS).
+
+### 🔌 Networking Models
+
+| Model     | Description                                                                    |
+|-----------|--------------------------------------------------------------------------------|
+| **CNI**   | Pods receive valid VNet IPs; direct communication with App Gateway             |
+| **Kubenet** | Pods use isolated IPs; requires route table config to forward traffic        |
+
+### ⚙️ How Integration Works
+
+1. Ingress Controller is deployed as a pod inside the AKS cluster.
+2. It watches the Kubernetes API for service/pod changes.
+3. Updates App Gateway config via ARM.
+4. Routes traffic to updated backend pods accordingly.
+
+---
+
+## 6️⃣ Pricing & SKUs
+
+| Category       | Version 1                                      | Version 2                                             |
+|----------------|------------------------------------------------|-------------------------------------------------------|
+| Fixed Pricing  | Based on gateway size (small/medium/large)     | Based on provisioned time (hourly)                    |
+| Variable Costs | Based on data processed                        | Based on capacity units                               |
+| Capacity Units | ❌                                             ✅  Includes:                                          | 
+|                |                                                | - ~2,500 persistent connections per unit              |
+|                |                                                | - Throughput allocation                               |
+|                |                                                | - CPU resources                                       |
+
+---
+
+## 7️⃣ Summary & Key Takeaways
+
+- Azure App Gateway is a **Layer 7** load balancer with deep traffic inspection and routing capabilities.
+- **V2 introduces enhanced features** like auto-scaling, availability zones, WAF custom rules, and static IPs.
+- Backend sets are flexible and may include various resources across regions.
+- Listener and Rule configurations control how traffic flows into backend services.
+- **AKS integration** enables App Gateway to dynamically route traffic to Kubernetes pods.
+- **Pricing models differ** significantly between V1 and V2—V2 uses more granular capacity unit billing.
+
+---
+
+### 📺 Reference  
+John Savill — *Technical Training Channel*  
+📹 [Watch on YouTube](https://www.youtube.com/watch?v=B3O6bXu-NbM)
+
+---
+
+Shape your traffic. Secure your stack. Scale with confidence. 🚀
