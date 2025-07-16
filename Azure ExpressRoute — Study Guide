@@ -1,0 +1,138 @@
+# 🛣️ Azure ExpressRoute — Study Guide  
+_A structured overview inspired by John Savill’s session: [Azure ExpressRoute Deep Dive](https://www.youtube.com/watch?v=oevwZZ1YFS0)_
+
+---
+
+## 🌍 Azure Global Network
+
+Azure operates one of the world’s largest cloud networks, powered by extensive fiber infrastructure and global peering relationships.
+
+- Connects Azure regions via a high-speed, low-latency backbone  
+- Facilitates internal and external traffic routing with reliability  
+- Defines regional latency zones (≈2ms round-trip boundaries)
+
+---
+
+## 🏙️ Regions & Redundant Gateways
+
+Azure regions are connected through **redundant regional network gateways**, enhancing:
+
+- **Resiliency** – Multiple paths prevent single points of failure  
+- **Performance** – Optimized entry/exit points to backbone infrastructure
+
+---
+
+## 🏗️ Edge Nodes & Peering Facilities
+
+Edge nodes extend Azure into **carrier-neutral locations**, improving:
+
+- **Connectivity** – Reduced hops to reach Azure via local carriers  
+- **Interoperability** – More choices for telecom providers  
+- **Efficiency** – Faster routes to public and private Azure services
+
+---
+
+## 🔗 Connectivity Models
+
+| Type             | Description                                                       |
+|------------------|-------------------------------------------------------------------|
+| **Point-to-Point** | Direct physical connection (e.g., fiber) to Azure               |
+| **Any-to-Any**     | MPLS-based mesh connectivity across multiple on-prem locations  |
+
+---
+
+## 🧩 ExpressRoute Circuits
+
+ExpressRoute circuits define the physical/logical connection to Azure.
+
+### 🆚 SKU Comparison
+
+| SKU        | Capabilities                                                                 |
+|------------|------------------------------------------------------------------------------|
+| **Standard** | Connectivity within a geopolitical boundary (e.g., North America)          |
+| **Premium**  | Cross-boundary access + **Microsoft 365**, global reach, expanded routing  |
+
+---
+
+## 🚀 ExpressRoute Direct
+
+For customers needing **ultra-high bandwidth** and reduced third-party dependence:
+
+- Connect directly to Microsoft’s edge routers  
+- Available in **10 Gbps or 100 Gbps ports**  
+- Avoids service provider middle layers for **enhanced security**
+
+---
+
+## 🔄 Peering Types
+
+| Type              | Description                                                                   |
+|-------------------|-------------------------------------------------------------------------------|
+| **Microsoft Peering** | Access Microsoft’s public services over ExpressRoute (e.g., Storage, SQL) |
+| **Private Peering**   | Extend on-prem to Azure VNets using virtual network gateways              |
+
+---
+
+## 🔧 Microsoft Peering Requirements
+
+To enable Microsoft peering, you must provide:
+
+- **Public IP ranges** (e.g., `/29`, `/30`)  
+- **ASN** (Autonomous System Number) for routing identity  
+- **Route filters** to limit exposed Azure services and regions
+
+---
+
+## 🔐 Private Peering Considerations
+
+Private peering requires:
+
+- **ExpressRoute Gateway** in each connected virtual network  
+- **Multi-VNet Support** — multiple VNets can share a circuit  
+- Careful attention to **gateway size/capacity** and **latency boundaries**
+
+---
+
+## 🔁 Routing Optimizations & Resiliency
+
+Optimize ExpressRoute behavior through:
+
+### 🧠 BGP Communities
+
+- Annotate routes with region/service metadata  
+- Useful for policy-based traffic steering
+
+### 🎯 Local Preference
+
+- Influence route decisions to favor **closer circuits**  
+- Enhances performance in multi-circuit environments
+
+---
+
+## 🌐 ExpressRoute Global Reach
+
+Global Reach enables private connectivity **between on-prem sites** across different regions:
+
+- Leverages Microsoft’s backbone as a transit path  
+- Enables backup/failover options between corporate locations  
+- Cost-effective alternative to full mesh MPLS deployments
+
+---
+
+## ✅ Summary & Key Takeaways
+
+- Azure ExpressRoute provides **dedicated, private, high-bandwidth** connectivity  
+- Supports both **public (Microsoft Peering)** and **private (VNet) access**  
+- Premium offerings allow **global access** and **enhanced scalability**  
+- Routing control, BGP customization, and diagnostic visibility ensure resilience  
+- **Global Reach** turns Azure into a **private backbone** for inter-site traffic
+
+---
+
+### 📺 Reference  
+John Savill — *Technical Training Channel*  
+📹 [Watch the Session](https://www.youtube.com/watch?v=oevwZZ1YFS0)
+
+---
+
+Design your edge. Peer with precision. Route with confidence. 🚀
