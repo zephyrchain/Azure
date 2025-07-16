@@ -1,0 +1,237 @@
+# 🛡️ Azure Governance — Study Notes  
+
+These notes are designed as a quick-reference companion for reviewing John Savill’s “Class v3 - Part 3 - Governance” and the Azure Governance guide.
+
+---
+
+## 🗂️ Azure Governance Hierarchy
+
+Azure governance is structured hierarchically to ensure scalable control and compliance across environments.
+
+### **Core Governance Layers**  
+- **Management Groups** – Aggregate multiple subscriptions; ideal for enterprise-level access and policy control.  
+- **Subscriptions** – Boundary for billing, quotas, and isolated access management.  
+- **Resource Groups** – Logical containers for grouping and managing related resources.  
+- **Resources** – Individual Azure services (e.g., VMs, storage, web apps).
+
+### **Scope and Inheritance**  
+- Governance artifacts—**RBAC**, **Policies**, and **Locks**—are inherited downward through this hierarchy.  
+- Supports up to **6 levels of nested Management Groups**, allowing structured delegation and compliance propagation.
+
+---
+
+## 🔐 Role-Based Access Control (RBAC)
+
+RBAC ensures secure access by assigning roles to users, groups, or identities.
+
+### **Roles and Permissions**  
+- Predefined roles include: `Owner`, `Contributor`, and `Reader`.  
+- Custom roles enable fine-tuned access control aligned to business needs.
+
+### **Assignment and Scope**  
+- Can be scoped to:  
+  - **Management Group**  
+  - **Subscription**  
+  - **Resource Group**  
+  - **Resource**  
+- Assignments are inherited through the hierarchy unless overridden.
+
+### **Principals and Least Privilege**  
+- Applies to **users**, **groups**, and **service principals**.  
+- **Follow the Least Privilege** principle to minimize access exposure.
+
+---
+
+## 📝 Azure Policy
+
+Azure Policy governs resource compliance by enforcing rules at the control plane level.
+
+### **Audit vs. Enforcement**  
+- Start with `Audit` to review impact non-intrusively.  
+- Move to `Deny` for strict enforcement once policies are validated.
+
+### **Policy Structure**  
+- Built using `if` conditions and `effects`, targeting resource attributes via **aliases**.  
+- Common **effects** include:  
+  - `Disabled` – No enforcement  
+  - `Audit` – Log non-compliance  
+  - `Deny` – Prevent resource changes  
+  - `Append` / `Modify` – Add or alter resource properties  
+  - `DeployIfNotExists` – Deploy missing configurations  
+  - `AuditIfNotExists` – Log missing configurations
+
+### **Policy Management**  
+- **Definitions** – Use built-in or custom policies.  
+- **Initiatives** – Group policies to track compliance (e.g., **PCI DSS**, **FedRAMP**, **NIST**).  
+- **Assignments** – Apply policies across scopes with **exclusions** and **exemptions** for mitigated or waived resources.
+
+---
+
+## 💰 Cost Management & Optimization
+
+Cost governance tools help analyze, forecast, and control Azure spending.
+
+### **Cost Analysis & Insights**  
+- Smart views powered by ML for spending patterns.  
+- Filter by **tags**, **subscriptions**, and **resource groups**.  
+- Export data for external analysis.
+
+### **Budgets & Triggers**  
+- Set budgets at **Management Group**, **Subscription**, or **Resource Group** scope.  
+- Enable actions based on thresholds:  
+  - **Email Alerts**  
+  - **Webhooks**  
+  - **Azure Functions**
+
+### **Tag Inheritance**  
+- Tags do not inherit by default; must be explicitly enabled for billing.  
+- Tag inheritance enables cost tracking from parent scopes.
+
+### **Cost Allocation Strategies**  
+- Shared cost distribution options:  
+  - **Even split**  
+  - **Custom percentages**  
+  - **Proportional to spend**
+
+### **Optimization Techniques**  
+- Use **Azure Pricing Calculator** and **Azure Advisor**.  
+- Save via:  
+  - **Reservations** (1 or 3 year)  
+  - **Savings Plans**  
+  - **Azure Hybrid Benefit** (reuse Windows/SQL licenses)  
+  - **Serverless architectures and autoscaling**  
+  - **On-Demand Capacity Reservations** for guaranteed availability
+
+---
+
+## 💡 Azure Advisor
+
+Azure Advisor provides personalized recommendations to optimize workloads.
+
+### **Advisor Score**  
+- Evaluates optimization across:  
+  - **Cost**  
+  - **Security**  
+  - **Reliability**  
+  - **Operational Excellence**  
+  - **Performance**
+
+### **Recommendations Overview**  
+- **Cost** – Right-size VMs, purchase Reservations, identify unused resources.  
+- **Security** – Strengthen posture (e.g., enable Defender).  
+- **Reliability** – Enhance high availability and disaster recovery.  
+- **Operational Excellence** – Improve tagging, monitoring, and automation.  
+- **Performance** – Suggest infrastructure upgrades and configuration tweaks.
+
+### **Notification & Alerting**  
+- Setup **Action Groups** to receive alerts through:  
+  - Email  
+  - ITSM integrations  
+  - Automation tools  
+- Generate periodic digests for summarizing recommendations.
+
+### **Assessments**  
+- Walk-through tools help identify weaknesses and guide remediation plans.
+
+---
+
+## 🔍 Resource Configuration Change (RCC)
+
+RCC, powered by **Azure Resource Graph**, tracks changes to resource properties.
+
+### **Key Features**  
+- Logs:  
+  - **Who** made the change  
+  - **What** tool was used (e.g. Portal, CLI)  
+  - **What** operation was performed  
+  - **Before/after** state of properties  
+- Retention:  
+  - 14-day default history  
+  - Exportable to **Log Analytics** for extended tracking
+
+### **Use Cases**  
+- Debug stability issues from misconfigurations  
+- Audit resource changes for governance reporting  
+- Enhance transparency for internal or external compliance reviews
+
+---
+
+## 📦 Deployment Stacks
+
+Deployment Stacks replace Blueprints and support structured resource lifecycle management.
+
+### **Capabilities**  
+- Group logically related resources—even across multiple subscriptions or resource groups.  
+- Enable lifecycle actions: **deploy**, **update**, **delete** together.
+
+### **Deny Settings & Exclusions**  
+- Use with ARM or **Bicep** templates.  
+- Apply **deny policies** to restrict modification/deletion.  
+- Configure **exclusions** for specific users or operations.
+
+### **Deployment Scope**  
+- Can be assigned to:  
+  - **Management Groups**  
+  - **Subscriptions**  
+  - **Resource Groups**  
+- Resources must reside within the stack’s defined scope.
+
+---
+
+## ⚙️ Azure Resource Graph
+
+A powerful, scalable query engine for real-time cloud inventory insights.
+
+### **Capabilities**  
+- Query across multiple subscriptions using **KQL** (Kusto Query Language).  
+- Interface options:  
+  - Azure Portal  
+  - PowerShell  
+  - CLI  
+- Fast queries with support for large-scale environments.  
+- **Read-only**—ideal for auditing, not resource changes.
+
+---
+
+## 📚 Strategic Governance Resources
+
+### **Azure Governance Docs**  
+- Planning landing zones  
+- Defining security and identity controls  
+- Implementing network architecture standards
+
+### **Cloud Adoption Framework (CAF)**  
+- Strategic guidance for cloud migration and operational maturity  
+- Includes policy templates, governance checklists, and monitoring practices
+
+### **Well-Architected Framework (WAF)**  
+- Best practices for building secure, scalable, and cost-efficient workloads  
+- Comes with scorecards and design review workflows
+
+### **Architecture Center**  
+- Reference designs for diverse Azure scenarios (e.g., hybrid, multicloud, SaaS)
+
+---
+
+## ✅ Tips
+
+- Understand the **hierarchical structure** of Azure governance  
+- Know the functions and scopes of:  
+  - **RBAC**  
+  - **Azure Policy**  
+  - **Locks**, **Budgets**, and **Cost Management**  
+- Master **Resource Configuration Change** usage for troubleshooting  
+- Know how **Azure Advisor** scores environments and what it recommends  
+- Familiarize with key resources: **CAF**, **WAF**, and **Architecture Center**
+
+---
+
+### 📺 Reference  
+**Source**:  
+John Savill — *Technical Training Channel*  
+📹 [Watch on YouTube](https://www.youtube.com/@NTFAQGuy)  
+🎓 Class v3 – Part 3: [Azure Governance](https://www.youtube.com/watch?v=t-i4XrygWCc)
+
+---
+
+Stay optimized. Govern smart. Make your cloud posture bulletproof. 🚀
