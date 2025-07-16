@@ -1,0 +1,134 @@
+# 🔑 Identity in Microsoft Azure — Study Notes
+
+These notes are designed as a quick-reference companion for reviewing Azure identity and access management concepts, inspired by John Savill’s expert training series.
+
+---
+
+## 🔐 Introduction to Identity
+- Identity is the new security perimeter in cloud computing.  
+- Cloud environments secure resources through identity-based permissions rather than firewalls.  
+- Educating users on threat detection is vital for preserving a secure environment.  
+
+---
+
+## 🛡️ Need for Identity
+- Different identities require tailored access levels.  
+- Principle of least privilege ensures each identity has only the permissions needed.  
+- Minimizes the risk of accidental or deliberate misuse.  
+
+---
+
+## ⚙️ Identity Basics
+- Permissions are grouped into roles assigned to identities within a defined scope.  
+- Identities can represent humans, applications, devices, and services.  
+- Each identity type requires appropriate access controls and policies.  
+
+---
+
+## 🌐 Decentralized Identity
+- Shifts control from centralized providers to individual users.  
+- Users own their identity data and share verifiable credentials issued by trusted authorities.  
+- Enhances privacy and reduces single points of failure.  
+
+---
+
+## 🔑 Entra ID Overview
+- Entra ID (formerly Azure AD) is Microsoft’s enterprise identity provider.  
+- Centralizes identity for Azure, Microsoft 365, and Dynamics 365 within a tenant.  
+- Tenants contain users, groups, devices, and policies; custom domains can be added.  
+
+---
+
+## 🧩 Entra ID Objects
+- **Users**: Individual human accounts with unique credentials.  
+- **Groups**: Collections of identities for bulk permission assignment.  
+- **Service Principals**: Application identities for automation and services.  
+- **Managed Identities**: Special service principals bound to Azure resources.  
+- **Devices**: Registered, joined, or hybrid-joined for device-based access controls.  
+
+---
+
+## 🔄 Synchronization
+- Sync between on-premises Active Directory and Entra ID maintains consistent identity data.  
+- Tools like Entra Connect Sync and Entra Cloud Sync enable one-way sync (AD → Entra ID) with limited write-back.  
+- Supports multiple AD forests syncing to a single Entra ID tenant.  
+
+---
+
+## 🔒 Authentication & Authorization
+- **Authentication** proves identity via something you know (password), have (phone), or are (biometric).  
+- **Authorization** grants permissions based on an authenticated identity’s roles.  
+- Common methods include password-hash sync, pass-through authentication, and federation.  
+
+---
+
+## 🏷️ Roles & Administrative Units
+- **Roles** bundle permissions for assignment to identities.  
+- **Administrative Units** scope roles to specific subsets of users, groups, or devices.  
+- Custom roles (up to 100 per tenant) enable granular permission definitions.  
+
+---
+
+## 🛡️ Privileged Identity Management (PIM)
+- Provides just-in-time privileged access with approval workflows.  
+- Assignments are time-bound, reducing standing privileges.  
+- Enhances security by ensuring elevated access only when needed.  
+
+---
+
+## 🌍 Entra Permissions Management
+- On-demand, ad-hoc permission governance across Azure, AWS, and GCP.  
+- Helps right-size permissions and remove unused access for least-privilege enforcement.  
+
+---
+
+## 🔍 Access Reviews
+- Automates recurring reviews of group memberships, app assignments, and role assignments.  
+- Prevents permission creep and ensures ongoing compliance.  
+
+---
+
+## 🔑 Multifactor & Strong Authentication
+- MFA requires two or more factors (password, phone, biometric).  
+- Strong methods like FIDO2, passkeys, and Temporary Access Passes (TAP) offer phishing-resistant, passwordless security.  
+
+---
+
+## 🛂 Conditional Access
+- Policy engine enforcing controls based on user, location, device, and risk signals.  
+- Evaluated during authentication and token issuance for context-driven protection.  
+
+---
+
+## 🤝 B2B & External ID
+- **B2B** enables partner collaboration using their existing identities.  
+- **External ID** manages customer identities via social or custom SAML/OIDC providers for seamless UX.  
+
+---
+
+## 📦 Entitlement Management & Workflows
+- **Access Packages** bundle groups, apps, and roles with defined policies.  
+- Workflow policies govern request approvals and lifecycle tasks for onboarding/offboarding.  
+
+---
+
+## 🌐 Internet & Private Access
+- Secure Service Edge (SSE) secures both internet and private network resources.  
+- Private Access uses connectors for protected network reachability.  
+- Internet Access applies security profiles to web traffic based on policies.  
+
+---
+
+## 🏛️ Active Directory in Azure
+- Azure AD Domain Services delivers managed domain services for hybrid environments.  
+- JsonADDomainExtension automates VM domain join, simplifying management and enhancing security.  
+
+---
+
+## 🎓 Reference
+Savill, J. (2025, January 13). *Class v3 – Part 2 – Identity* [Video]. YouTube.  
+https://www.youtube.com/watch?v=megA6BPpYqo&list=PLlVtbbG169nGccbp8VSpAozu3w9xSQJoY&index=3  
+
+---
+
+Keep your identity perimeter strong. Secure access, secure cloud.  
