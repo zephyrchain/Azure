@@ -1,0 +1,197 @@
+Hyper-V Study Guide 
+
+1. Introduction to Hyper-V
+•	Definition: Hyper-V is Microsoft's hypervisor, introduced with Windows Server 2008.
+•	Significance: It enables virtualization by allowing multiple virtual machines (VMs) to run on a single physical host.
+•	Type: Type 1 hypervisor, meaning it runs directly on the hardware (bare-metal).
+•	Usage: Used in Azure, Azure Stack, and Windows Server environments.
+
+2. Physical Host Resources
+•	Components: 
+o	CPU: Performs computational tasks.
+o	Memory: RAM allocated to VMs.
+o	Network Interface Cards (NICs): Connect to networks, possibly segmented via VLANs.
+o	Storage: Local or external (SAN via iSCSI/Fiber Channel, NAS via SMB).
+o	GPU: Important for tasks like machine learning.
+•	Virtualization Benefit: Avoids resource waste by allowing multiple VMs on a single host.
+
+3. Virtual Machines Overview
+•	Creation: Multiple VMs can be created on a single physical host.
+•	Resource Allocation: Each VM gets a portion of the host's CPU, memory, network, and storage.
+•	Isolation: VMs are completely isolated at the kernel mode level, ensuring security and stability.
+
+4. The Hypervisor
+•	Role: Manages and allocates physical resources (CPU, memory) to VMs.
+•	Type: Type 1 hypervisor, running directly on hardware.
+•	Hardware Support: Requires hardware-assisted virtualization (Intel VT, AMD-V) and features like Second Level Address Translation (SLAT).
+
+5. Management Partition
+•	Parent Partition: The original host OS becomes the management partition after enabling Hyper-V.
+•	Driver Handling: Manages drivers for network, storage, and GPU resources on behalf of VMs.
+•	Security: Micr-kernelized architecture separates driver management from the hypervisor for added security.
+
+6. VMBus Communication
+•	VMBus: A kernel-mode, in-memory bus that facilitates communication between VMs and the parent partition.
+•	Components: 
+o	Virtual Service Consumer (VSC): Resides in VMs.
+o	Virtual Service Provider (VSP): Resides in the parent partition, communicates with the I/O stack and drivers.
+
+7. CPU Rings and Hyper-V
+•	CPU Rings: 
+o	Ring 0: Kernel mode (OS operations).
+o	Ring 3: User mode (applications).
+o	Ring -1: Hypervisor operations, allowing the hypervisor to manage VMs without interfering with guest OS operations.
+
+8. VM Management Processes
+•	Virtual Machine Management Service (VMMS): Runs in the parent partition to manage VMs.
+•	VM Worker Process: Each VM has a dedicated process to monitor its state and manage operations like start/stop.
+•	Reboot Impact: Rebooting the parent partition requires shutting down or saving the state of VMs, as they rely on the parent for storage and network connectivity.
+
+9. Azure and Hyper-V
+•	Usage in Azure: Azure uses Hyper-V as its hypervisor.
+•	Management Differences: Azure implements features like VM Fu (Virtual Machine Preserving Host Update) to maintain VMs during host updates.
+•	Innovations: Features like GPU partitioning in Windows Server 2025 may eventually be integrated into Azure.
+
+10. Synthetic vs. Emulated Hardware
+•	Enlightened OSs: Modern OSs understand they are running in a VM and use synthetic drivers for better performance.
+•	Emulated Hardware: Older or Gen 1 VMs may use emulated hardware (e.g., IDE controller, legacy NIC), which can impact performance.
+•	Performance: Synthetic drivers offer near-native performance, while emulated hardware incurs overhead.
+
+11. Generations of VMs
+•	Gen 1 VMs: 
+o	BIOS-based.
+o	Boot from IDE controller.
+o	Use legacy NIC.
+•	Gen 2 VMs: 
+o	UEFI-based.
+o	Boot from SCSI controller.
+o	Support secure boot and virtual TPM.
+o	Better performance due to synthetic hardware.
+•	Conversion: Difficult due to different disk structures and drivers.
+
+12. CPU Resource Allocation and Scalability
+•	Physical CPU Structure: 
+o	Sockets: Physical CPU units.
+o	Cores: Processing units within a socket.
+o	Hyperthreading: Allows multiple threads per core, increasing logical processors.
+•	Virtual CPUs (vCPUs): Allocated to VMs, with the ability to overcommit (allocate more vCPUs than physical CPUs).
+•	Dynamic Allocation: Hypervisor dynamically allocates CPU cycles to VMs based on demand.
+•	Scalability Limits: 
+o	Host: Up to 248 logical processors and 4 PB of RAM.
+o	VM: Up to 2048 vCPUs and 240 TB of RAM.
+
+13. vCPU Configurations
+•	Static Allocation: Number of vCPUs cannot be changed while the VM is running.
+•	Reserve: Guarantees a minimum percentage of CPU capacity.
+•	Limit: Restricts the VM to a maximum percentage of CPU usage.
+•	Relative Weight: Prioritizes CPU allocation during contention (e.g., higher weight for a SQL server VM compared to a domain controller).
+
+14. Core Scheduler
+•	Introduction: Introduced in Windows Server 2016 as the default scheduler in Windows Server 2019 and above.
+•	Functionality: 
+o	Prevents side-channel attacks by ensuring processes from different VMs are not scheduled on the same core.
+o	Event ID 2 in Event Viewer confirms the use of the core scheduler (type 3).
+
+15. Processor Compatibility
+•	Compatibility Mode: Dumbs down the processor to a basic instruction set to enable live migration between different processor models (Intel to Intel or AMD to AMD only).
+•	Dynamic Compatibility Mode: Available in failover clusters, dumbs down to the lowest common denominator among cluster nodes.
+•	Configuration: Set in Hyper-V Manager or via PowerShell.
+
+16. NUMA Configuration
+•	Non-Uniform Memory Access (NUMA): Memory access times differ based on proximity to the processor socket.
+•	NUMA Spanning: Enabled by default, allows memory allocation across different NUMA nodes for better VM density (with a minor performance penalty).
+
+17. Memory Management
+•	Dynamic Memory: 
+o	Minimum/Maximum: Sets bounds for memory allocation.
+o	Starting Memory: Initial allocation at VM startup.
+o	Buffer: Maintains a percentage of unused memory within the VM.
+o	Weight: Prioritizes memory allocation among VMs.
+•	Runtime Memory Resize: 
+o	Manual adjustment of memory allocation while the VM is running.
+o	Supported on Windows 10/Server 2016 and above, and Linux with hot-add capability.
+•	Balloon Driver: 
+o	Mechanism to reclaim memory by inflating a driver within the guest OS, effectively reserving pages for the hypervisor to reallocate.
+
+18. Networking
+•	Virtual Network Interfaces: 
+o	Synthetic network adapter (recommended for performance).
+o	Legacy emulated network adapter (for compatibility with older OSs).
+•	Virtual Switch Types: 
+o	External: Connects VMs to physical NICs for external network access.
+o	Internal: Enables communication between VMs and the host, without external access.
+o	Private: Isolates VMs on the same host, with no host or external access.
+•	Advanced Features: 
+o	VLAN support for network segmentation.
+o	Bandwidth management to set minimum and maximum limits.
+o	VMQ (Virtual Machine Queue) for distributing network traffic across multiple cores.
+o	SR-IOV (Single Root I/O Virtualization) for direct hardware access and low latency.
+o	Security features like MAC address spoofing and DHCP guard.
+
+19. Storage
+•	VHDX Formats: 
+o	Dynamic: Expands as data is written, saving initial storage space.
+o	Fixed: Pre-allocates the entire disk space upfront for consistent performance.
+o	Differencing: Tracks changes from a parent disk, useful for creating multiple similar VMs (e.g., VDI environments).
+•	Storage Locations: 
+o	Local storage (not recommended for clustered environments).
+o	Storage Spaces Direct (hyper-converged infrastructure).
+o	SAN (Storage Area Network) via iSCSI or Fiber Channel.
+o	SMB3 file shares for network-attached storage.
+•	Advanced Storage Features: 
+o	Virtual Fiber Channel: Maps physical HBAs (Host Bus Adapters) into VMs for direct SAN access.
+o	Shared VHDX: Allows multiple VMs to access the same disk (e.g., for clustering).
+o	Live Storage Migration: Moves storage between locations without downtime by copying data and syncing changes before switching paths.
+
+20. Live Migration
+•	Purpose: Moves running VMs between hosts with minimal downtime (used for maintenance, load balancing, or failure recovery).
+•	Process: 
+1.	Copies memory and state from source to destination host.
+2.	Tracks and re-copies dirty pages (changed during the initial copy).
+3.	Pauses the VM briefly to transfer the final state and CPU context.
+4.	Resumes the VM on the destination host and redirects clients.
+•	Configuration Options: 
+o	Concurrent migrations (limit based on network capacity).
+o	Dedicated network for live migration traffic.
+o	Combined live migration and storage migration for "shared nothing" scenarios (moves VM and its storage simultaneously).
+
+21. Management Tools
+•	Hyper-V Manager: 
+o	Basic GUI tool for small-scale environments.
+o	Can manage multiple hosts but lacks advanced features.
+•	PowerShell: 
+o	Scripting and automation for Hyper-V management tasks.
+•	Windows Admin Center: 
+o	Free, web-based tool for managing Hyper-V hosts and clusters.
+o	Provides a modern interface and integrates with other Windows Server features.
+•	System Center Virtual Machine Manager (SCVMM): 
+o	Enterprise-grade management solution for large Hyper-V deployments.
+o	Features include templating, service deployment, and advanced monitoring.
+•	Azure Arc: 
+o	Extends Azure management capabilities to on-premises Hyper-V environments.
+o	Enables hybrid cloud scenarios with unified governance and monitoring.
+
+22. Licensing
+•	Windows Server Licensing: 
+o	Hyper-V is included with Windows Server licenses (per core).
+o	Most customers already own the necessary licenses.
+•	Azure Stack HCI: 
+o	Subscription-based model for hyper-converged infrastructure solutions.
+o	Includes Hyper-V as part of the package.
+•	Historical Option: 
+o	Previously, Microsoft offered a free Hyper-V Server product for specific use cases (e.g., Linux VMs or VDI), but this has been deprecated in favor of the above licensing models.
+
+23. Summary
+•	Hyper-V is a robust, enterprise-grade Type 1 hypervisor comparable to VMware or KVM.
+•	Key strengths include: 
+o	Advanced memory and CPU management (dynamic allocation, core scheduling).
+o	Comprehensive networking and storage options.
+o	Seamless mobility features (live migration, storage migration).
+o	Broad guest OS support (Windows and Linux).
+o	Integration with Azure for hybrid cloud scenarios.
+•	Ideal for both on-premises virtualization and cloud-based deployments via Azure Stack HCI.
+
+📺 Reference
+Savill, J. (2024, December 9). Hyper‑V Overview [Video]. YouTube. https://www.youtube.com/watch?v=CqgsJzn3uXM
+
+Stay virtual. Stay versatile. Let your workloads live their best (virtual) life. 🚀
